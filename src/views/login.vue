@@ -29,53 +29,51 @@
   </div>
 </template>
 <script>
-import "@/styles/index.less";
+import '@/styles/index.less'
 import { login } from '@/api/users-api.js'
 export default {
-  data() {
+  data () {
     return {
       loginform: {
-        username: "",
-        password: ""
+        username: '',
+        password: ''
       },
       rules: {
         username: [
-          { required: true, message: "请输入用户名", trigger: "blur" }
+          { required: true, message: '请输入用户名', trigger: 'blur' }
         ],
         password: [
-          { required: true, message: "请选择密码", trigger: "blur" },
-          { min: 3, max: 16, message: "长度在 3 到 16 个字符", trigger: "blur" }
+          { required: true, message: '请选择密码', trigger: 'blur' },
+          { min: 3, max: 16, message: '长度在 3 到 16 个字符', trigger: 'blur' }
         ]
       }
-    };
+    }
   },
   methods: {
-    submitlogin() {
+    submitlogin () {
       this.$refs.loginform.validate(valid => {
         if (valid) {
-         
           login(this.loginform)
-          .then(res=>{
-            
-            if(res.data.meta.status === 200){
-              let token = res.data.data.token
-              localStorage.setItem('token',token)
-              this.$router.push({name:'home'})
-            }else {
-              this.$message.warning(res.data.meta.msg);
-            }
-          })
-          .catch(err=>{
-            console.log(err);
-          })
+            .then(res => {
+              if (res.data.meta.status === 200) {
+                let token = res.data.data.token
+                localStorage.setItem('token', token)
+                this.$router.push({ name: 'home' })
+              } else {
+                this.$message.warning(res.data.meta.msg)
+              }
+            })
+            .catch(err => {
+              console.log(err)
+            })
         } else {
-          this.$message.error("错了哦，这是一条错误消息");
-          return false;
+          this.$message.error('请输入正确的用户名或密码')
+          return false
         }
-      });
+      })
     }
   }
-};
+}
 </script>
 <style lang='less' scoped>
 .login {

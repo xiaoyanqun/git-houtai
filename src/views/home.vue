@@ -4,8 +4,8 @@
       <el-aside width="200px">
         <div class="logo"></div>
         <el-menu
-          :router = "'true'"
-          :unique-opened = "'true'"
+          :router="true"
+          :unique-opened="true"
           default-active="2"
           class="el-menu-vertical-demo"
           background-color="#545c64"
@@ -18,7 +18,7 @@
               <span>用户管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="1-1">
+              <el-menu-item index="/home/user">
                 <template slot="title">
                   <i class="el-icon-location"></i>
                   <span>导航一</span>
@@ -26,7 +26,7 @@
               </el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-           <el-submenu index="2">
+          <el-submenu index="2">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span>权限管理</span>
@@ -40,7 +40,7 @@
               </el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-           <el-submenu index="3">
+          <el-submenu index="3">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span>商品管理</span>
@@ -54,7 +54,7 @@
               </el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-           <el-submenu index="4">
+          <el-submenu index="4">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span>订单管理</span>
@@ -68,7 +68,7 @@
               </el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-           <el-submenu index="5">
+          <el-submenu index="5">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span>数据统计</span>
@@ -85,14 +85,20 @@
         </el-menu>
       </el-aside>
       <el-container>
-        <el-header>Header</el-header>
-        <el-main>Main</el-main>
+        <el-header>
+          <div class="toggle-btn myicon myicon-menu"></div>
+          <div class="system-title">电商后台管理系统</div>
+          <a href="javascript:;" class="welcome">退出</a>
+        </el-header>
+        <el-main>
+          <router-view></router-view>
+        </el-main>
       </el-container>
     </el-container>
   </div>
 </template>
 <script>
-export default {};
+export default {}
 </script>
 <style lang='less' scoped>
 .home {
