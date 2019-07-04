@@ -36,3 +36,17 @@ export const adduser = (data) => {
     data
   })
 }
+
+export const deluser = (id) => {
+  return axios({
+    method: 'delete',
+    url: `users/${id}`
+  })
+}
+
+export const userstate = (id, type) => {
+  return axios({
+    method: 'put',
+    url: `users/${id}/state/${type}`
+  })
+}

@@ -8,7 +8,7 @@
     </el-breadcrumb>
     <!-- 搜索框 -->
     <div style="margin: 15px 0;">
-      <el-input @keyup.13.native='search' v-model='user.query' placeholder="请输入内容" class="input-with-select" style="width:300px;margin-right:5px">
+      <el-input :search='search1' @keyup.13.native='search' v-model='user.query' placeholder="请输入内容" class="input-with-select" style="width:300px;margin-right:5px">
         <el-button @click="search" slot="append" icon="el-icon-search"></el-button>
       </el-input>
       <el-button @click="showadduser = true" type="success" plain>添加成员</el-button>
@@ -22,8 +22,8 @@
       <el-table-column label="修改状态" width="100px">
         <template slot-scope="scope">
           <el-switch
-            @click="handleEdit(scope.$index, scope.row)"
-            v-model="value2"
+            @change = "changeuserstate(scope.row.id,scope.row.mg_state)"
+            v-model="scope.row.mg_state"
             active-color="#13ce66"
             inactive-color="#ff4949"
           ></el-switch>
@@ -33,7 +33,6 @@
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" content="编辑" placement="top">
             <el-button
-              @click="handleEdit(scope.$index, scope.row)"
               type="primary"
               plain
               icon="el-icon-edit"
@@ -43,7 +42,7 @@
             <el-button type="success " plain icon="el-icon-share"></el-button>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="删除" placement="top">
-            <el-button type="danger" plain icon="el-icon-delete"></el-button>
+            <el-button @click = 'showdel(scope.row.id)' type="danger" plain icon="el-icon-delete"></el-button>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -82,7 +81,7 @@
   </div>
 </template>
 <script>
-import { users, adduser } from '@/api/users-api.js'
+import { users, adduser, deluser, userstate } from '@/api/users-api.js'
 export default {
   data () {
     return {
@@ -129,11 +128,60 @@ export default {
     }
   },
   methods: {
+    // 修改用户状态
+    changeuserstate (id, type) {
+      userstate(id, type)
+        .then(res => {
+          if (res.data.meta.status === 200) {
+            this.$message({
+              type: 'success',
+              message: res.data.meta.msg
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: res.data.meta.msg
+            })
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    // 删除用户方法
+    showdel (id) {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deluser(id).then(res => {
+          if (res.data.meta.status === 200) {
+            this.user.pagenum = Math.ceil((this.total - 1) / this.user.pagesize) < this.user.pagenum ? --this.user.pagenum : this.user.pagenum
+            this.init()
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: res.data.meta.msg
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
     // 查询用户方法
     init () {
       users(this.user)
         .then(res => {
-          console.log(res)
+          // console.log(res)
           if (res.data.meta.status === 200) {
             this.userlist = res.data.data.users
             this.total = res.data.data.total
@@ -144,9 +192,6 @@ export default {
         .catch(err => {
           console.log(err)
         })
-    },
-    handleEdit (index, row) {
-      console.log(index, row)
     },
     // 点击切换页面展示条数时
     handleSizeChange (val) {
@@ -164,7 +209,6 @@ export default {
         if (valid) {
           adduser(this.userfrom)
             .then(res => {
-              console.log(res)
               if (res.data.meta.status === 201) {
                 this.showadduser = false
                 this.$refs.adduserfrom.resetFields()
@@ -187,6 +231,14 @@ export default {
   },
   mounted () {
     this.init()
+  },
+  computed: {
+    search1 () {
+      if (this.user.query.length === 0) {
+        this.init()
+      }
+      return 'ok'
+    }
   }
 }
 </script>

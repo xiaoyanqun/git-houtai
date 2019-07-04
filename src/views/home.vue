@@ -21,7 +21,7 @@
               <el-menu-item index="/home/user">
                 <template slot="title">
                   <i class="el-icon-location"></i>
-                  <span>导航一</span>
+                  <span>用户列表</span>
                 </template>
               </el-menu-item>
             </el-menu-item-group>
