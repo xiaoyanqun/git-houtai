@@ -32,10 +32,16 @@
               <span>权限管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="1-1">
+              <el-menu-item index="/home/role">
                 <template slot="title">
                   <i class="el-icon-location"></i>
-                  <span>导航一</span>
+                  <span>角色列表</span>
+                </template>
+              </el-menu-item>
+              <el-menu-item index="/home/right">
+                <template slot="title">
+                  <i class="el-icon-location"></i>
+                  <span>权限列表</span>
                 </template>
               </el-menu-item>
             </el-menu-item-group>
