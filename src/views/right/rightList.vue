@@ -28,7 +28,7 @@ export default {
     }
   },
   mounted () {
-    rolesList().then(res => {
+    rolesList('list').then(res => {
       console.log(res)
       if (res.data.meta.status === 200) {
         this.rightList = res.data.data
