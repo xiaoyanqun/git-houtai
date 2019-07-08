@@ -12,78 +12,16 @@
           text-color="#fff"
           active-text-color="#ffd04b"
         >
-          <el-submenu index="1">
+          <el-submenu :index="val.id+''" v-for="val in LeftList" :key="val.id">
             <template slot="title">
               <i class="el-icon-location"></i>
-              <span>用户管理</span>
+              <span>{{val.authName}}</span>
             </template>
-            <el-menu-item-group>
-              <el-menu-item index="/home/user">
+            <el-menu-item-group v-for="val2 in val.children" :key="val2.id">
+              <el-menu-item :index="'/home/'+val2.path">
                 <template slot="title">
                   <i class="el-icon-location"></i>
-                  <span>用户列表</span>
-                </template>
-              </el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-          <el-submenu index="2">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>权限管理</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="/home/role">
-                <template slot="title">
-                  <i class="el-icon-location"></i>
-                  <span>角色列表</span>
-                </template>
-              </el-menu-item>
-              <el-menu-item index="/home/right">
-                <template slot="title">
-                  <i class="el-icon-location"></i>
-                  <span>权限列表</span>
-                </template>
-              </el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-          <el-submenu index="3">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>商品管理</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="3-1">
-                <template slot="title">
-                  <i class="el-icon-location"></i>
-                  <span>导航一</span>
-                </template>
-              </el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-          <el-submenu index="4">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>订单管理</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="4-1">
-                <template slot="title">
-                  <i class="el-icon-location"></i>
-                  <span>导航一</span>
-                </template>
-              </el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-          <el-submenu index="5">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>数据统计</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="5-1">
-                <template slot="title">
-                  <i class="el-icon-location"></i>
-                  <span>导航一</span>
+                  <span>{{val2.authName}}</span>
                 </template>
               </el-menu-item>
             </el-menu-item-group>
@@ -104,7 +42,24 @@
   </div>
 </template>
 <script>
-export default {}
+import { getAllLeftList } from '@/api/roles-api.js'
+export default {
+  data () {
+    return {
+      LeftList: []
+    }
+  },
+  mounted () {
+    getAllLeftList()
+      .then(res => {
+        console.log(res)
+        this.LeftList = res.data.data
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+}
 </script>
 <style lang='less' scoped>
 .home {

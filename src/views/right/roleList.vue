@@ -250,10 +250,13 @@ export default {
     giveroles () {
       console.log(this.$refs.mytree.getCheckedNodes())
       let arr = this.$refs.mytree.getCheckedNodes()
-      let arr2 = []
-      arr.forEach(val => {
-        let temp = val.id + ',' + val.pid
-        arr2.push(temp)
+
+      // arr.forEach(val => {
+      //   let temp = val.id + ',' + val.pid
+      //   arr2.push(temp)
+      // })
+      let arr2 = arr.map(item => {
+        return item.id + ',' + item.pid
       })
       let str = arr2.join(',')
       let strarr = str.split(',')
@@ -304,7 +307,7 @@ export default {
         })
       this.rightList = row.children
       this.roledialogVisible = true
-      this.checkedArr = []
+      this.checkedArr.length = 0
       row.children.forEach(value => {
         if (value.children && value.children.length > 0) {
           value.children.forEach(value1 => {

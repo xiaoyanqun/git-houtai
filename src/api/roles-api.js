@@ -56,3 +56,10 @@ export const editRolesById = (data) => {
     data
   })
 }
+
+// 左侧菜单栏权限
+export const getAllLeftList = () => {
+  return axios({
+    url: 'menus'
+  })
+}
