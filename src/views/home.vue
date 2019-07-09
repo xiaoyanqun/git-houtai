@@ -32,7 +32,10 @@
         <el-header>
           <div class="toggle-btn myicon myicon-menu"></div>
           <div class="system-title">电商后台管理系统</div>
-          <a href="javascript:;" class="welcome">退出</a>
+          <div>
+            <span style="color:#fff">欢迎您：{{$store.getters.getUserName}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="javascript:;" class="welcome" @click='logout'>退出</a>
+          </div>
         </el-header>
         <el-main>
           <router-view></router-view>
@@ -58,6 +61,12 @@ export default {
       .catch(err => {
         console.log(err)
       })
+  },
+  methods: {
+    logout () {
+      localStorage.removeItem('token')
+      this.$router.push({ name: 'login' })
+    }
   }
 }
 </script>

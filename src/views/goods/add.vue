@@ -31,27 +31,44 @@
               :options="goodsCateList"
               :props="cascaderProps"
               clearable
-              v-model="addform.goods_cat"
             ></el-cascader>
           </el-form-item>
         </el-tab-pane>
-        <el-tab-pane label="商品参数" name="2">商品参数</el-tab-pane>
+        <el-tab-pane  label="商品参数" name="2">商品参数</el-tab-pane>
         <el-tab-pane label="商品属性" name="3">商品属性</el-tab-pane>
-        <el-tab-pane label="商品图片" name="4">商品图片</el-tab-pane>
-        <el-tab-pane label="商品内容" name="5">商品内容</el-tab-pane>
-         <!-- 多选框 -->
-      <el-form-item label="是否促销">
-            <el-radio v-model="addform.is_promote" label="1" border size="medium">是</el-radio>
-        <el-radio v-model="addform.is_promote" label="2" border size="medium">否</el-radio>
-          </el-form-item>
+        <el-tab-pane label="商品图片" name="4">
+          <el-upload
+            class="upload-demo"
+            action="http://localhost:8888/api/private/v1/upload"
+            :on-remove="handleRemove"
+            :on-success = "onsuccess"
+            :headers="getheader()"
+            list-type="picture"
+             :before-upload ="upload"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          </el-upload>
+        </el-tab-pane>
+        <el-tab-pane label="商品内容" name="5">
+          <quillEditor v-model="addform.goods_introduce" style="height:300px;border-bottom:1px solid #ccc"></quillEditor>
+        </el-tab-pane>
       </el-tabs>
-
+       <el-button style="float:right;" type="primary" @click="addGoods">确认添加</el-button>
     </el-form>
   </div>
 </template>
 <script>
-import { getAllCateList } from '@/api/goods-api'
+import { getAllCateList, addGoods, getCategories } from '@/api/goods-api'
+import { quillEditor } from 'vue-quill-editor'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
 export default {
+  components: {
+    quillEditor
+  },
   data () {
     return {
       active: '1',
@@ -62,8 +79,9 @@ export default {
         goods_number: '',
         goods_weight: '',
         goods_introduce: '',
-        pics: '',
-        attrs: ''
+        pics: [],
+        attrs: [],
+        goods_state: 1
       },
       goodsCateList: [],
       cascaderProps: {
@@ -75,9 +93,60 @@ export default {
     }
   },
   methods: {
+    // 判断图片类型
+    upload (type) {
+      if (type.type.indexOf('image/') === -1) {
+        this.$message.error('上传内容为图片格式')
+        return false
+      }
+    },
+    addGoods () {
+      console.log(this.addform)
+      addGoods(this.addform)
+        .then(res => {
+          console.log(res)
+          if (res.data.meta.status === 201) {
+            this.$message.success(res.data.meta.msg)
+            this.$router.push({ name: 'list' })
+          } else {
+            this.$message.error(res.data.meta.msg)
+          }
+        }).catch(err => {
+          console.log(err)
+        })
+    },
     selectList (value) {
-      console.log(value)
+      this.addform.goods_cat = value.join(',')
+      // 获取商品参数
       console.log(this.addform.goods_cat)
+      getCategories('73', 'only')
+        .then(res => {
+          console.log(res)
+        }).catch(err => {
+          console.log(err)
+        })
+    },
+    // 删除图片时触发
+    handleRemove (file, fileList) {
+      if (!file.response) {
+        return
+      }
+      this.addform.pics.forEach((item, index) => {
+        if (item.pic === file.response.data.tmp_path) {
+          this.addform.pics.splice(index, 1)
+        }
+        console.log(this.addform.pics)
+      })
+    },
+    // 编写请求头
+    getheader () {
+      let token = localStorage.getItem('token')
+      return { Authorization: token }
+    },
+    // 上传成功是触发
+    onsuccess (response, file, fileList) {
+      this.addform.pics.push({ pic: response.data.tmp_path })
+      console.log(this.addform.pics)
     }
   },
   mounted () {

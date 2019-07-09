@@ -3,6 +3,9 @@ import App from './App.vue'
 import router from '@/routers/router.js'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import store from '@/vuex.js'
+
+// require styles
 
 Vue.use(ElementUI)
 // 路由全局前置守卫
@@ -20,6 +23,7 @@ router.beforeEach((to, from, next) => {
 Vue.config.productionTip = false
 
 new Vue({
+  store,
   router,
   render: h => h(App)
 }).$mount('#app')

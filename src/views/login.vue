@@ -59,6 +59,13 @@ export default {
                 let token = res.data.data.token
                 localStorage.setItem('token', token)
                 this.$router.push({ name: 'home' })
+                let UserName = res.data.data.username
+                // 通过直接操作store中的数据，不推荐
+                // this.$store.state.username = UserName
+                // commit(mutations中的函数名称):同步调用方式:不建议使用
+                // this.$store.commit('setUserName', UserName)
+                // 以异步的方式进行数据的处理
+                this.$store.dispatch('getSetUserName', UserName)
               } else {
                 this.$message.warning(res.data.meta.msg)
               }

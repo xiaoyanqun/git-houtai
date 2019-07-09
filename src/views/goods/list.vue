@@ -1,6 +1,5 @@
 <template>
   <div class="list">
-
     <!-- 搜索框 -->
     <div style="margin: 15px 0;">
       <el-input
@@ -25,7 +24,7 @@
       <el-table-column label="操作" width="240">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" content="编辑" placement="top">
-            <el-button  type="primary" plain icon="el-icon-edit"></el-button>
+            <el-button type="primary" plain icon="el-icon-edit"></el-button>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="权限管理" placement="top">
             <el-button type="success " plain icon="el-icon-share"></el-button>
@@ -92,7 +91,6 @@ export default {
       this.goodsQuery.pagenum = val
       this.init()
     }
-
   },
   mounted () {
     this.init()
